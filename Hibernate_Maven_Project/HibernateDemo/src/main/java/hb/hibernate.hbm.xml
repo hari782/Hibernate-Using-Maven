@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+	 <class name="hb.student" table="Student_Info">
+		 <!--set up Primary key -->
+		<id name="rollno" type="string" length="30">
+			<generator class="assigned"></generator>
+		</id>
+		 <!--Other field setup -->
+		<property name="stname" length="100" type="string"></property>
+		<property name="rank" length="3" type="integer"></property>
+		<property name="mark" length="5" type="double"></property>
+	</class>
+	
+	<class name="hb.Employee" table="employee" discriminator-value="shortlisted">
+		<id name="emp_id" type="string" length="50">
+			<generator class="assigned"></generator>
+		</id>
+		
+		<discriminator column="category" type="string" length="50"></discriminator>
+		<property name="emp_name" type="string" length="50"></property>
+		
+		<subclass name="hb.Contract" discriminator-value="contract">
+		<property name="hr_rate" type="double" length="5"></property>
+		<property name="incentive" type="double"></property>
+		</subclass>
+		<subclass name="hb.Permanent" discriminator-value="permanent">
+		<property name="salary" type="double" length="10"></property>
+		<property name="bonus" type="double" length="10"></property>
+		</subclass>
+	</class>
+	
+	<!--Union subclass-->
+	
+	<class name="hb.Employee" table="employee">
+		<id name="emp_id" type="string" length="50">
+			<generator class="assigned"></generator>
+		</id>
+		
+		
+		<property name="emp_name" type="string" length="50"></property>
+		
+		<union-subclass name="hb.Contract">
+		<property name="hr_rate" type="double" length="5"></property>
+		<property name="incentive" type="double"></property>
+		</union-subclass>
+		<union-subclass name="hb.Permanent">
+		<property name="salary" type="double" length="10"></property>
+		<property name="bonus" type="double" length="10"></property>
+		</union-subclass>
+	</class>
+	
+	<!-- Joined subclass-->
+	
+	<class name="hb.Employee" table="employee">
+		<id name="emp_id" type="string" length="50">
+			<generator class="assigned"></generator>
+		</id>
+		
+		
+		<property name="emp_name" type="string" length="50"></property>
+		
+		<joined-subclass name="hb.Contract" table="Contract">
+		<key column="emp_id"></key>
+		<property name="hr_rate" type="double" length="5"></property>
+		<property name="incentive" type="double"></property>
+		</joined-subclass>
+		<joined-subclass name="hb.Permanent" table="Permanent">
+		<key column="emp_id"></key>
+		<property name="salary" type="double" length="10"></property>
+		<property name="bonus" type="double" length="10"></property>
+		</joined-subclass>
+	</class>
+	
+	<!--Component Mapping-->
+	
+	<class name="hb.Staff" table="Staff">
+		<id name="staff_id" length="30" type="string">
+		<generator class="assigned"></generator>
+		</id>
+		
+		<property name="staff_name" type="string" length="100"></property>
+		<component name="ad" class="hb.StaffAddress">
+			<property name="add1" type="string" length="150"></property>
+			<property name="add2" type="string" length="150"></property>
+			<property name="street" type="string" length="150"></property>
+			<property name="city" type="string" length="150"></property>
+			<property name="pincode" type="string" length="50"></property>
+		</component>
+	
+	</class>
+	
+	<!-- Collection Mapping -->
+		
+		<class name="hb.Group" table="groups">
+			<id name="groupid" type="string" length="20">
+				<generator class = "assigned"></generator>
+			</id>
+			<property name="owner_name" type="string" length="100"></property>
+			<list name="group" table="group_names">
+				<key column="groupid"></key>
+				<index column="group_index"></index>
+				<element column="group_values" type="string" length="200"></element>
+			</list>
+		</class>
+	
+</hibernate-mapping>
