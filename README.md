@@ -1,1 +1,1 @@
-# Hibernate-Using-Maven
+# Hibernate-Using-Maven (Cardinalities)
